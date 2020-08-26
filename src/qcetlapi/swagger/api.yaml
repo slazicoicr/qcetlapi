@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: QC ETL API
+  description: API for getting information of QC ETL caches
+  version: 0.1.0
+servers:
+  - url: /1.0
+    description: Version 1 of the API
+paths:
+  /caches:
+    get:
+      tags: 
+        - Caches
+      summary: The names of the available caches
+      operationId: qcetlapi.api.cache_names
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                type: array
+                items: 
+                  type: string
+  /cache/{name}:
+    get:
+      tags:
+        - Caches
+      summary: The versions available for the named cache
+      operationId: qcetlapi.api.cache_versions
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Name of the cache
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                type: array
+                items:
+                  type: integer
+        404:
+          description: Unknown cache name
+  /cache/{name}/{version}:
+    get:
+      tags:
+        - Caches
+      summary: The tables available in the cache
+      operationId: qcetlapi.api.cache_tables
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Name of the cache
+        - in: path
+          name: version
+          schema:
+            type: integer
+          required: true
+          description: Version of the cache
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                type: array
+                items:
+                  type: string
+        404:
+          description: Unknown cache name
+  /cache/{name}/{version}/{table}:
+    get:
+      tags:
+        - Caches
+      summary: The DataFrame in JSON format
+      operationId: qcetlapi.api.get_json
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Name of the cache
+        - in: path
+          name: version
+          schema:
+            type: integer
+          required: true
+          description: Version of the cache
+        - in: path
+          name: table
+          schema:
+            type: string
+          required: true
+          description: Name of the DataFrame table to retrieve
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                type: array
+                items:
+                  type: string
+        404:
+          description: Unknown cache name
+tags:
+  - name: Caches
+    description: Get information about QC ETL caches 
